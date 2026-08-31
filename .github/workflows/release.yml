@@ -55,7 +55,7 @@ jobs:
       - name: Read version
         id: get_version
         run: |
-          APP_VER=$(tr -d '\r\n' < VERSION)
+          APP_VER=$(tr -d '\r\n' < src/VERSION)
           echo "VERSION=$APP_VER" >> $GITHUB_ENV
           echo "Current Version is: $APP_VER"
 
