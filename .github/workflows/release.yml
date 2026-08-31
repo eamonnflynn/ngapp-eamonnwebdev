@@ -34,7 +34,7 @@ jobs:
 
       - name: Run unit tests
         working-directory: src
-        run: npm test -- --run
+        run: npm test -- --watch=false
 
   release-and-deploy:
     name: Release & Deploy to Production

@@ -33,7 +33,7 @@ jobs:
 
       - name: Run unit tests
         working-directory: src
-        run: npm test -- --run
+        run: npm test -- --watch=false
 
       - name: Build application
         working-directory: src
