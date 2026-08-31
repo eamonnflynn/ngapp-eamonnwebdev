@@ -1,1 +1,25 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+@theme {
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-heading: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+}
+
+@layer base {
+
+    /* Apply font-heading to all heading tags */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: var(--font-heading);
+    }
+
+    /* Set body to default to font-sans */
+    body {
+        font-family: var(--font-sans);
+    }
+}
