@@ -67,5 +67,5 @@ jobs:
           username: ${{ secrets.FTP_STAGING_USERNAME }}
           password: ${{ secrets.FTP_STAGING_PASSWORD }}
           server-dir: ${{ secrets.FTP_STAGING_DIR }}
-          local-dir: ./staging-dist/
+          local-dir: ./src/dist/ngapp-eamonnwebdev/browser/
           dangerous-clean-slate: true
