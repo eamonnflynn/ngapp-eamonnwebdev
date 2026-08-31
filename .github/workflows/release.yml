@@ -1,0 +1,96 @@
+name: Release & Production Deployment
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    name: Verify Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'npm'
+          cache-dependency-path: 'src/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: src
+        run: npm ci
+
+      - name: Run unit tests
+        working-directory: src
+        run: npm test -- --run
+
+  release-and-deploy:
+    name: Release & Deploy to Production
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'npm'
+          cache-dependency-path: 'src/package-lock.json'
+
+      - name: Read version
+        id: get_version
+        run: |
+          APP_VER=$(tr -d '\r\n' < VERSION)
+          echo "VERSION=$APP_VER" >> $GITHUB_ENV
+          echo "Current Version is: $APP_VER"
+
+      - name: Install dependencies
+        working-directory: src
+        run: npm ci
+
+      - name: Build production Angular client
+        working-directory: src
+        run: npm run build -- --configuration production
+
+      - name: Package release archives
+        run: |
+          mkdir -p release-packages
+          tar -czf release-packages/ngapp-eamonnwebdev-${{ env.VERSION }}.tar.gz -C src/dist/ngapp-eamonnwebdev/browser .
+          (cd src/dist/ngapp-eamonnwebdev/browser && zip -r ../../../../release-packages/ngapp-eamonnwebdev-${{ env.VERSION }}.zip .)
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: Release v${{ env.VERSION }}
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+          files: release-packages/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy to Production via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_PROD_SERVER }}
+          username: ${{ secrets.FTP_PROD_USERNAME }}
+          password: ${{ secrets.FTP_PROD_PASSWORD }}
+          server-dir: ${{ secrets.FTP_PROD_DIR }}
+          local-dir: ./src/dist/ngapp-eamonnwebdev/browser/
+          dangerous-clean-slate: true
