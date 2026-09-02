@@ -2,13 +2,14 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IconComponent } from '../../../components/icon.component';
 import { CodeViewerComponent } from '../../../components/code-viewer.component';
+import { ExerciseTabsComponent } from '../../../components/exercise-tabs.component';
 
 type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
 
 @Component({
   selector: 'app-control-flow',
   standalone: true,
-  imports: [CommonModule, IconComponent, CodeViewerComponent],
+  imports: [CommonModule, IconComponent, CodeViewerComponent, ExerciseTabsComponent],
   template: `
     <div class="mx-auto max-w-5xl space-y-8 p-6 lg:p-10">
       <!-- Breadcrumb & Header -->
@@ -33,34 +34,10 @@ type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancell
       </div>
 
       <!-- Navigation Tabs -->
-      <div class="flex items-center gap-2 rounded-xl bg-slate-200/70 p-1.5 w-fit">
-        <button
-          type="button"
-          (click)="activeTab.set('playground')"
-          class="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-150 cursor-pointer"
-          [class.bg-white]="activeTab() === 'playground'"
-          [class.text-slate-900]="activeTab() === 'playground'"
-          [class.shadow-sm]="activeTab() === 'playground'"
-          [class.text-slate-600]="activeTab() !== 'playground'"
-          [class.hover:text-slate-900]="activeTab() !== 'playground'"
-        >
-          <app-icon name="activity" [size]="16" />
-          <span>Interactive Lab & Explanation</span>
-        </button>
-        <button
-          type="button"
-          (click)="activeTab.set('code')"
-          class="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-150 cursor-pointer"
-          [class.bg-white]="activeTab() === 'code'"
-          [class.text-slate-900]="activeTab() === 'code'"
-          [class.shadow-sm]="activeTab() === 'code'"
-          [class.text-slate-600]="activeTab() !== 'code'"
-          [class.hover:text-slate-900]="activeTab() !== 'code'"
-        >
-          <app-icon name="code" [size]="16" />
-          <span>Component Code & Implementation</span>
-        </button>
-      </div>
+      <app-exercise-tabs
+        [activeTab]="activeTab()"
+        (tabChange)="activeTab.set($event)"
+      />
 
       <!-- Tab Content: Playground & Theory -->
       @if (activeTab() === 'playground') {
