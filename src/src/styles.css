@@ -4,6 +4,18 @@
     --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
     --font-heading: 'IBM Plex Sans', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
+
+    --color-primary-50: #f0f7ff;
+    --color-primary-100: #dcf2ff;
+    --color-primary-200: #b5e5ff;
+    --color-primary-300: #75d3ff;
+    --color-primary-400: #2cbcff;
+    --color-primary-500: #00a3f1;
+    --color-primary-600: #0082cb;
+    --color-primary-700: #0067a5;
+    --color-primary-800: #035685;
+    --color-primary-900: #0a4870;
+    --color-primary-950: #052e4a;
 }
 
 @layer base {
@@ -18,8 +30,35 @@
         font-family: var(--font-heading);
     }
 
-    /* Set body to default to font-sans */
-    body {
-        font-family: var(--font-sans);
-    }
+
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(100, 116, 139, 0.3) transparent;
+}
+
+*::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: rgba(100, 116, 139, 0.3);
+    border-radius: 9999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(100, 116, 139, 0.5);
+}
+
+body {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: var(--font-sans);
 }
